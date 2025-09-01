@@ -1,6 +1,6 @@
-- [ ] Setup React + TypeScript + Vite project
-- [ ] Signup page and Login page
-- [ ] OTP-based signup flow
+- [x] Setup React + TypeScript + Vite project
+- [x] Signup page and Login page
+- [x] OTP-based signup flow
 - [ ] Google login
 - [ ] Dashboard page with notes CRUD (create, delete, list)
 - [ ] Responsive design
