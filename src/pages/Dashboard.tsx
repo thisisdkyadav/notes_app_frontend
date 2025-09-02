@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { notesApi, type Note } from "../services/notesApi"
 import CreateNoteModal from "../components/CreateNoteModal"
 import EditNoteModal from "../components/EditNoteModal"
+import ProfileModal from "../components/ProfileModal"
 import NoteItem from "../components/NoteItem"
 import logoSvg from "../assets/logo.svg"
 
@@ -16,6 +17,7 @@ const Dashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
+  const [showProfileModal, setShowProfileModal] = useState(false)
   const [editingNote, setEditingNote] = useState<Note | null>(null)
 
   const handleLogout = () => {
@@ -109,9 +111,28 @@ const Dashboard: React.FC = () => {
             <span className="ml-2 text-lg font-bold text-gray-900">HD</span>
             <h1 className="ml-6 text-xl font-bold text-gray-900">Dashboard</h1>
           </div>
-          <button onClick={handleLogout} className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-            Sign Out
-          </button>
+
+          <div className="flex items-center gap-3">
+            {/* Profile Card */}
+            <button onClick={() => setShowProfileModal(true)} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+              {user?.profilePicture ? (
+                <img src={user.profilePicture} alt="Profile" className="w-8 h-8 rounded-full border-2 border-blue-200" />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">{user?.name?.charAt(0)?.toUpperCase() || "U"}</div>
+              )}
+              <div className="hidden md:block text-left">
+                <p className="text-sm font-medium text-gray-900">{user?.name?.split(" ")[0]}</p>
+                <p className="text-xs text-gray-500">{user?.email}</p>
+              </div>
+              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <button onClick={handleLogout} className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
 
@@ -119,22 +140,8 @@ const Dashboard: React.FC = () => {
       <div className="px-4 py-6">
         {/* Welcome Section */}
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            {user?.profilePicture ? (
-              <img src={user.profilePicture} alt="Profile" className="w-10 h-10 rounded-full border-2 border-blue-200" />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">{user?.name?.charAt(0)?.toUpperCase() || "U"}</div>
-            )}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                Welcome, {user?.name?.split(" ")[0]} {user?.name?.split(" ")[1]} !
-              </h2>
-              <p className="text-gray-600 text-sm">
-                Email: {user?.email || ""}
-                {user?.authProvider === "google" && <span className="ml-2 text-blue-600 text-xs">• Google Account</span>}
-              </p>
-            </div>
-          </div>
+          <h2 className="text-2xl font-bold text-gray-900">Welcome back, {user?.name?.split(" ")[0]}!</h2>
+          <p className="text-gray-600 text-sm">Manage your notes and stay organized.</p>
         </div>
 
         {/* Search Bar */}
@@ -209,6 +216,8 @@ const Dashboard: React.FC = () => {
         }}
         onNoteUpdated={fetchNotes}
       />
+
+      <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
     </div>
   )
 }

@@ -23,6 +23,14 @@ export interface User {
   isVerified: boolean
   profilePicture?: string
   authProvider?: "email" | "google"
+  dateOfBirth?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface UpdateProfileRequest {
+  name: string
+  dateOfBirth?: string
 }
 
 export interface AuthResponse {
@@ -77,6 +85,40 @@ export const authApi = {
     if (!response.ok) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Google authentication failed")
+    }
+
+    return response.json()
+  },
+
+  async getProfile(token: string): Promise<ApiResponse<User>> {
+    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "Failed to fetch profile")
+    }
+
+    return response.json()
+  },
+
+  async updateProfile(data: UpdateProfileRequest, token: string): Promise<ApiResponse<User>> {
+    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "Failed to update profile")
     }
 
     return response.json()
