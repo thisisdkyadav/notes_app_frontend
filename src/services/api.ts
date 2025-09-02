@@ -21,6 +21,8 @@ export interface User {
   email: string
   name: string
   isVerified: boolean
+  profilePicture?: string
+  authProvider?: "email" | "google"
 }
 
 export interface AuthResponse {
@@ -58,6 +60,23 @@ export const authApi = {
     if (!response.ok) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Failed to verify OTP")
+    }
+
+    return response.json()
+  },
+
+  async loginWithGoogle(googleToken: string): Promise<ApiResponse<AuthResponse>> {
+    const response = await fetch(`${API_BASE_URL}/auth/google`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: googleToken }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "Google authentication failed")
     }
 
     return response.json()

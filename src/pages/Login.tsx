@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { authApi } from "../services/api"
 import { useAuth } from "../contexts/AuthContext"
+import LoginWithGoogle from "../components/LoginWithGoogle"
 import logoSvg from "../assets/logo.svg"
 import blueImageSvg from "../assets/blue_image.svg"
 
@@ -59,6 +60,24 @@ const Login: React.FC = () => {
       await handleSendOTP()
     } else {
       await handleVerifyOTP()
+    }
+  }
+
+  const handleGoogleLogin = async (googleToken: string) => {
+    setLoading(true)
+    setError("")
+
+    try {
+      const response = await authApi.loginWithGoogle(googleToken)
+
+      if (response.success && response.data) {
+        login(response.data.user, response.data.token)
+        navigate("/dashboard")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Google login failed")
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -162,6 +181,21 @@ const Login: React.FC = () => {
               </div>
             )}
           </form>
+
+          {/* Divider */}
+          <div className="my-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Google Login */}
+          <LoginWithGoogle callback={handleGoogleLogin} />
 
           {/* Sign Up Link */}
           <p className="text-center text-sm text-gray-600 mt-6">

@@ -5,6 +5,8 @@ interface User {
   email: string
   name: string
   isVerified: boolean
+  profilePicture?: string
+  authProvider?: "email" | "google"
 }
 
 interface AuthContextType {

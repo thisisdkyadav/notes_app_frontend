@@ -119,10 +119,22 @@ const Dashboard: React.FC = () => {
       <div className="px-4 py-6">
         {/* Welcome Section */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">
-            Welcome, {user?.name?.split(" ")[0]} {user?.name?.split(" ")[1]} !
-          </h2>
-          <p className="text-gray-600 text-sm">Email: {user?.email || ""}</p>
+          <div className="flex items-center gap-3 mb-2">
+            {user?.profilePicture ? (
+              <img src={user.profilePicture} alt="Profile" className="w-10 h-10 rounded-full border-2 border-blue-200" />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">{user?.name?.charAt(0)?.toUpperCase() || "U"}</div>
+            )}
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">
+                Welcome, {user?.name?.split(" ")[0]} {user?.name?.split(" ")[1]} !
+              </h2>
+              <p className="text-gray-600 text-sm">
+                Email: {user?.email || ""}
+                {user?.authProvider === "google" && <span className="ml-2 text-blue-600 text-xs">• Google Account</span>}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Search Bar */}
