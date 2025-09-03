@@ -7,6 +7,7 @@ interface User {
   isVerified: boolean
   profilePicture?: string
   authProvider?: "email" | "google"
+  dateOfBirth?: string
 }
 
 interface AuthContextType {
