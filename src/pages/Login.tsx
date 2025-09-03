@@ -85,129 +85,137 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left side - Form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-8 lg:px-12 lg:py-12 bg-white">
-        <div className="max-w-sm mx-auto w-full">
-          {/* Logo */}
-          <div className="flex items-center mb-8">
-            <img src={logoSvg} alt="HD Logo" className="h-8 w-8" />
-            <span className="ml-3 text-xl font-bold" style={{ color: "#232323" }}>
-              HD
-            </span>
-          </div>
+      <div className="flex-1 flex flex-col bg-white">
+        {/* Logo - Fixed at top */}
+        <div className="flex items-center px-6 py-8 lg:px-12 lg:py-8">
+          <img src={logoSvg} alt="HD Logo" className="h-8 w-8" />
+          <span className="ml-3 text-xl font-bold" style={{ color: "#232323" }}>
+            HD
+          </span>
+        </div>
 
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2" style={{ color: "#232323" }}>
-              Sign in
-            </h1>
-            <p className="text-sm" style={{ color: "#969696" }}>
-              Please login to continue to your account.
-            </p>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Input */}
-            <div>
-              <FloatingLabelInput
-                id="email"
-                name="email"
-                type="email"
-                label="Email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value)
-                  setError("")
-                }}
-                disabled={otpSent}
-                required
-                placeholder="jonas_khanwald@gmail.com"
-              />
+        {/* Form Container - Centered */}
+        <div className="flex-1 flex flex-col justify-center px-6 pb-8 lg:px-12 lg:pb-12">
+          <div className="max-w-sm mx-auto w-full">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold mb-2" style={{ color: "#232323" }}>
+                Sign in
+              </h1>
+              <p className="text-sm" style={{ color: "#969696" }}>
+                Please login to continue to your account.
+              </p>
             </div>
 
-            {/* OTP Input - Shows after OTP is sent */}
-            {otpSent && (
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Email Input */}
               <div>
                 <FloatingLabelInput
-                  id="otp"
-                  name="otp"
-                  type="text"
-                  label="Enter OTP"
-                  value={otp}
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="Email"
+                  value={email}
                   onChange={(e) => {
-                    setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+                    setEmail(e.target.value)
                     setError("")
                   }}
+                  disabled={otpSent}
                   required
-                  maxLength={6}
-                  placeholder="000000"
-                  className="text-center text-lg tracking-widest"
+                  placeholder="jonas_khanwald@gmail.com"
                 />
               </div>
-            )}
 
-            {/* Keep me logged in - Only show if OTP not sent yet */}
-            {!otpSent && (
-              <div className="flex items-center">
-                <input id="remember" name="remember" type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-                <label htmlFor="remember" className="ml-2 block text-sm" style={{ color: "#969696" }}>
-                  Keep me logged in
-                </label>
-              </div>
-            )}
+              {/* OTP Input - Shows after OTP is sent */}
+              {otpSent && (
+                <div>
+                  <FloatingLabelInput
+                    id="otp"
+                    name="otp"
+                    type="text"
+                    label="Enter OTP"
+                    value={otp}
+                    onChange={(e) => {
+                      setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+                      setError("")
+                    }}
+                    required
+                    maxLength={6}
+                    placeholder="000000"
+                    className="text-center text-lg tracking-widest"
+                  />
+                </div>
+              )}
 
-            {/* Error/Success Messages */}
-            {error && (
-              <div className="rounded-lg bg-red-50 p-3">
-                <div className="text-sm text-red-700">{error}</div>
-              </div>
-            )}
+              {/* Keep me logged in - Only show if OTP not sent yet */}
+              {!otpSent && (
+                <div className="flex items-center">
+                  <input id="remember" name="remember" type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+                  <label htmlFor="remember" className="ml-2 block text-sm" style={{ color: "#969696" }}>
+                    Keep me logged in
+                  </label>
+                </div>
+              )}
 
-            {success && (
-              <div className="rounded-lg bg-green-50 p-3">
-                <div className="text-sm text-green-700">{success}</div>
-              </div>
-            )}
+              {/* Error/Success Messages */}
+              {error && (
+                <div className="rounded-lg bg-red-50 p-3">
+                  <div className="text-sm text-red-700">{error}</div>
+                </div>
+              )}
 
-            {/* Submit Button */}
-            <button type="submit" disabled={loading || (otpSent && otp.length !== 6)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[10px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed" style={{ width: "399px", maxWidth: "100%", height: "59px" }}>
-              {loading ? (otpSent ? "Verifying..." : "Sending OTP...") : otpSent ? "Verify OTP" : "Send OTP"}
-            </button>
+              {success && (
+                <div className="rounded-lg bg-green-50 p-3">
+                  <div className="text-sm text-green-700">{success}</div>
+                </div>
+              )}
 
-            {/* Resend OTP - Shows after OTP is sent */}
-            {otpSent && (
-              <div className="text-center">
-                <button type="button" onClick={handleSendOTP} disabled={loading} className="text-blue-600 hover:text-blue-700 text-sm font-medium disabled:opacity-50">
-                  Didn't receive the code? Resend
-                </button>
-              </div>
-            )}
-          </form>
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading || (otpSent && otp.length !== 6)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[10px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ width: "399px", maxWidth: "100%", height: "59px" }}
+              >
+                {loading ? (otpSent ? "Verifying..." : "Sending OTP...") : otpSent ? "Verify OTP" : "Send OTP"}
+              </button>
 
-          {/* Divider */}
-          <div className="my-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white" style={{ color: "#969696" }}>
-                  Or continue with
-                </span>
+              {/* Resend OTP - Shows after OTP is sent */}
+              {otpSent && (
+                <div className="text-center">
+                  <button type="button" onClick={handleSendOTP} disabled={loading} className="text-blue-600 hover:text-blue-700 text-sm font-medium disabled:opacity-50">
+                    Didn't receive the code? Resend
+                  </button>
+                </div>
+              )}
+            </form>
+
+            {/* Divider */}
+            <div className="my-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white" style={{ color: "#969696" }}>
+                    Or continue with
+                  </span>
+                </div>
               </div>
             </div>
+
+            {/* Google Login */}
+            <LoginWithGoogle callback={handleGoogleLogin} />
+
+            {/* Sign Up Link */}
+            <p className="text-center text-sm mt-6" style={{ color: "#969696" }}>
+              Need an account?{" "}
+              <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
+                Create one
+              </Link>
+            </p>
           </div>
-
-          {/* Google Login */}
-          <LoginWithGoogle callback={handleGoogleLogin} />
-
-          {/* Sign Up Link */}
-          <p className="text-center text-sm mt-6" style={{ color: "#969696" }}>
-            Need an account?{" "}
-            <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
-              Create one
-            </Link>
-          </p>
         </div>
       </div>
 
