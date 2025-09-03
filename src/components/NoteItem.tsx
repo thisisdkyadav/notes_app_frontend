@@ -8,9 +8,10 @@ interface NoteItemProps {
   onTogglePin: (id: string, isPinned: boolean) => void
   onToggleArchive?: (id: string, isArchived: boolean) => void
   showArchiveOption?: boolean
+  onView?: (note: Note) => void
 }
 
-const NoteItem: React.FC<NoteItemProps> = ({ note, onEdit, onDelete, onTogglePin, onToggleArchive, showArchiveOption = false }) => {
+const NoteItem: React.FC<NoteItemProps> = ({ note, onEdit, onDelete, onTogglePin, onToggleArchive, showArchiveOption = false, onView }) => {
   const [showFullContent, setShowFullContent] = useState(false)
 
   const truncateContent = (content: string, maxLength: number = 100) => {
@@ -29,8 +30,18 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, onEdit, onDelete, onTogglePin
     })
   }
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't trigger if clicking on buttons or interactive elements
+    if (e.target !== e.currentTarget && !(e.target as HTMLElement).closest(".note-content")) {
+      return
+    }
+    if (onView) {
+      onView(note)
+    }
+  }
+
   return (
-    <div className={`bg-white rounded-lg border p-4 hover:shadow-md transition-shadow ${note.isArchived ? "border-gray-300 bg-gray-50 opacity-75" : note.isPinned ? "border-blue-300 bg-blue-50" : "border-gray-200"}`}>
+    <div className={`bg-white rounded-lg border p-4 hover:shadow-md transition-shadow cursor-pointer ${note.isArchived ? "border-gray-300 bg-gray-50 opacity-75" : note.isPinned ? "border-blue-300 bg-blue-50" : "border-gray-200"}`} onClick={handleCardClick}>
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
@@ -89,7 +100,7 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, onEdit, onDelete, onTogglePin
       </div>
 
       {/* Content */}
-      <div className="mb-3">
+      <div className="mb-3 note-content">
         <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">{showFullContent ? note.content : truncateContent(note.content)}</p>
         {note.content.length > 100 && (
           <button onClick={() => setShowFullContent(!showFullContent)} className="text-blue-600 hover:text-blue-700 text-xs mt-1 font-medium">

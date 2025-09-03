@@ -5,6 +5,7 @@ import { notesApi, type Note } from "../services/notesApi"
 import CreateNoteModal from "../components/CreateNoteModal"
 import EditNoteModal from "../components/EditNoteModal"
 import ProfileModal from "../components/ProfileModal"
+import NoteDetailModal from "../components/NoteDetailModal"
 import NoteItem from "../components/NoteItem"
 import logoSvg from "../assets/logo.svg"
 
@@ -18,7 +19,9 @@ const Dashboard: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showProfileModal, setShowProfileModal] = useState(false)
+  const [showDetailModal, setShowDetailModal] = useState(false)
   const [editingNote, setEditingNote] = useState<Note | null>(null)
+  const [viewingNote, setViewingNote] = useState<Note | null>(null)
   const [currentView, setCurrentView] = useState<"active" | "archived">("active")
   const [archivedNotes, setArchivedNotes] = useState<Note[]>([])
 
@@ -106,6 +109,11 @@ const Dashboard: React.FC = () => {
     setShowEditModal(true)
   }
 
+  const handleViewNote = (note: Note) => {
+    setViewingNote(note)
+    setShowDetailModal(true)
+  }
+
   const handleClearSearch = () => {
     setSearchTerm("")
     fetchNotes()
@@ -135,7 +143,6 @@ const Dashboard: React.FC = () => {
           <div className="flex items-center">
             <img src={logoSvg} alt="HD Logo" className="h-6 w-6" />
             <span className="ml-2 text-lg font-bold text-gray-900">HD</span>
-            <h1 className="ml-6 text-xl font-bold text-gray-900">Dashboard</h1>
           </div>
 
           <div className="flex items-center gap-3">
@@ -288,7 +295,7 @@ const Dashboard: React.FC = () => {
           ) : (
             <div className="space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0">
               {(currentView === "active" ? notes : archivedNotes).map((note) => (
-                <NoteItem key={note._id} note={note} onEdit={handleEditNote} onDelete={handleDeleteNote} onTogglePin={handleTogglePin} onToggleArchive={handleToggleArchive} showArchiveOption={true} />
+                <NoteItem key={note._id} note={note} onEdit={handleEditNote} onDelete={handleDeleteNote} onTogglePin={handleTogglePin} onToggleArchive={handleToggleArchive} showArchiveOption={true} onView={handleViewNote} />
               ))}
             </div>
           )}
@@ -309,6 +316,19 @@ const Dashboard: React.FC = () => {
       />
 
       <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
+
+      <NoteDetailModal
+        isOpen={showDetailModal}
+        note={viewingNote}
+        onClose={() => {
+          setShowDetailModal(false)
+          setViewingNote(null)
+        }}
+        onEdit={handleEditNote}
+        onDelete={handleDeleteNote}
+        onTogglePin={handleTogglePin}
+        onToggleArchive={handleToggleArchive}
+      />
     </div>
   )
 }
