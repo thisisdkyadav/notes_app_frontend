@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { authApi } from "../services/api"
 import { useAuth } from "../contexts/AuthContext"
 import LoginWithGoogle from "../components/LoginWithGoogle"
+import FloatingLabelInput from "../components/FloatingLabelInput"
 import logoSvg from "../assets/logo.svg"
 import blueImageSvg from "../assets/blue_image.svg"
 
@@ -105,89 +106,55 @@ const Signup: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center mb-8">
             <img src={logoSvg} alt="HD Logo" className="h-8 w-8" />
-            <span className="ml-3 text-xl font-bold text-gray-900">HD</span>
+            <span className="ml-3 text-xl font-bold" style={{ color: "#232323" }}>
+              HD
+            </span>
           </div>
 
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Sign up</h1>
-            <p className="text-gray-600 text-sm">Sign up to enjoy the feature of HD</p>
+            <h1 className="text-3xl font-bold mb-2" style={{ color: "#232323" }}>
+              Sign up
+            </h1>
+            <p className="text-sm" style={{ color: "#969696" }}>
+              Sign up to enjoy the feature of HD
+            </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Input */}
             <div>
-              <label htmlFor="name" className="block text-sm text-gray-600 mb-1">
-                Your Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                disabled={otpSent}
-                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm disabled:bg-gray-50"
-                placeholder="Jonas Khanwald"
-                value={formData.name}
-                onChange={handleInputChange}
-              />
+              <FloatingLabelInput id="name" name="name" type="text" label="Your Name" value={formData.name} onChange={handleInputChange} disabled={otpSent} required placeholder="Jonas Khanwald" />
             </div>
 
             {/* Date of Birth Input */}
             <div>
-              <label htmlFor="dateOfBirth" className="block text-sm text-gray-600 mb-1">
-                Date of Birth
-              </label>
-              <input
-                id="dateOfBirth"
-                name="dateOfBirth"
-                type="date"
-                required
-                disabled={otpSent}
-                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm disabled:bg-gray-50"
-                value={formData.dateOfBirth}
-                onChange={handleInputChange}
-              />
+              <FloatingLabelInput id="dateOfBirth" name="dateOfBirth" type="date" label="Date of Birth" value={formData.dateOfBirth} onChange={handleInputChange} disabled={otpSent} required />
             </div>
 
             {/* Email Input */}
             <div>
-              <label htmlFor="email" className="block text-sm text-gray-600 mb-1">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                disabled={otpSent}
-                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm disabled:bg-gray-50"
-                placeholder="jonas_khanwald@gmail.com"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
+              <FloatingLabelInput id="email" name="email" type="email" label="Email" value={formData.email} onChange={handleInputChange} disabled={otpSent} required placeholder="jonas_khanwald@gmail.com" />
             </div>
 
             {/* OTP Input - Shows after OTP is sent */}
             {otpSent && (
               <div>
-                <label htmlFor="otp" className="block text-sm text-gray-600 mb-1">
-                  Enter OTP
-                </label>
-                <input
+                <FloatingLabelInput
                   id="otp"
                   name="otp"
                   type="text"
-                  required
-                  maxLength={6}
-                  className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-lg tracking-widest"
-                  placeholder="000000"
+                  label="Enter OTP"
                   value={otp}
                   onChange={(e) => {
                     setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
                     setError("")
                   }}
+                  required
+                  maxLength={6}
+                  placeholder="000000"
+                  className="text-center text-lg tracking-widest"
                 />
               </div>
             )}
@@ -206,7 +173,7 @@ const Signup: React.FC = () => {
             )}
 
             {/* Submit Button */}
-            <button type="submit" disabled={loading || (otpSent && otp.length !== 6)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" disabled={loading || (otpSent && otp.length !== 6)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[10px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed" style={{ width: "399px", maxWidth: "100%", height: "59px" }}>
               {loading ? (otpSent ? "Verifying..." : "Sending OTP...") : otpSent ? "Verify OTP" : "Get OTP"}
             </button>
 
@@ -227,7 +194,9 @@ const Signup: React.FC = () => {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-white" style={{ color: "#969696" }}>
+                  Or continue with
+                </span>
               </div>
             </div>
           </div>
@@ -236,7 +205,7 @@ const Signup: React.FC = () => {
           <LoginWithGoogle callback={handleGoogleSignup} />
 
           {/* Sign In Link */}
-          <p className="text-center text-sm text-gray-600 mt-6">
+          <p className="text-center text-sm mt-6" style={{ color: "#969696" }}>
             Already have an account?{" "}
             <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
               Sign in
@@ -246,8 +215,10 @@ const Signup: React.FC = () => {
       </div>
 
       {/* Right side - Blue background image */}
-      <div className="hidden lg:block flex-1 relative">
-        <img src={blueImageSvg} alt="Blue Abstract Background" className="absolute inset-0 w-full h-full object-cover" />
+      <div className="hidden lg:block flex-1 p-3">
+        <div className="relative h-full w-full rounded-2xl overflow-hidden">
+          <img src={blueImageSvg} alt="Blue Abstract Background" className="absolute inset-0 w-full h-full object-cover" />
+        </div>
       </div>
     </div>
   )

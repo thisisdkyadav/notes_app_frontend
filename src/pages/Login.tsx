@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { authApi } from "../services/api"
 import { useAuth } from "../contexts/AuthContext"
 import LoginWithGoogle from "../components/LoginWithGoogle"
+import FloatingLabelInput from "../components/FloatingLabelInput"
 import logoSvg from "../assets/logo.svg"
 import blueImageSvg from "../assets/blue_image.svg"
 
@@ -89,57 +90,58 @@ const Login: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center mb-8">
             <img src={logoSvg} alt="HD Logo" className="h-8 w-8" />
-            <span className="ml-3 text-xl font-bold text-gray-900">HD</span>
+            <span className="ml-3 text-xl font-bold" style={{ color: "#232323" }}>
+              HD
+            </span>
           </div>
 
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Sign in</h1>
-            <p className="text-gray-600 text-sm">Please login to continue to your account.</p>
+            <h1 className="text-3xl font-bold mb-2" style={{ color: "#232323" }}>
+              Sign in
+            </h1>
+            <p className="text-sm" style={{ color: "#969696" }}>
+              Please login to continue to your account.
+            </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Input */}
             <div>
-              <label htmlFor="email" className="block text-sm text-gray-600 mb-1">
-                Email
-              </label>
-              <input
+              <FloatingLabelInput
                 id="email"
                 name="email"
                 type="email"
-                required
-                disabled={otpSent}
-                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm disabled:bg-gray-50"
-                placeholder="jonas_khanwald@gmail.com"
+                label="Email"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value)
                   setError("")
                 }}
+                disabled={otpSent}
+                required
+                placeholder="jonas_khanwald@gmail.com"
               />
             </div>
 
             {/* OTP Input - Shows after OTP is sent */}
             {otpSent && (
               <div>
-                <label htmlFor="otp" className="block text-sm text-gray-600 mb-1">
-                  Enter OTP
-                </label>
-                <input
+                <FloatingLabelInput
                   id="otp"
                   name="otp"
                   type="text"
-                  required
-                  maxLength={6}
-                  className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-lg tracking-widest"
-                  placeholder="000000"
+                  label="Enter OTP"
                   value={otp}
                   onChange={(e) => {
                     setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
                     setError("")
                   }}
+                  required
+                  maxLength={6}
+                  placeholder="000000"
+                  className="text-center text-lg tracking-widest"
                 />
               </div>
             )}
@@ -148,7 +150,7 @@ const Login: React.FC = () => {
             {!otpSent && (
               <div className="flex items-center">
                 <input id="remember" name="remember" type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-                <label htmlFor="remember" className="ml-2 block text-sm text-gray-600">
+                <label htmlFor="remember" className="ml-2 block text-sm" style={{ color: "#969696" }}>
                   Keep me logged in
                 </label>
               </div>
@@ -168,7 +170,7 @@ const Login: React.FC = () => {
             )}
 
             {/* Submit Button */}
-            <button type="submit" disabled={loading || (otpSent && otp.length !== 6)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" disabled={loading || (otpSent && otp.length !== 6)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-[10px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed" style={{ width: "399px", maxWidth: "100%", height: "59px" }}>
               {loading ? (otpSent ? "Verifying..." : "Sending OTP...") : otpSent ? "Verify OTP" : "Send OTP"}
             </button>
 
@@ -189,7 +191,9 @@ const Login: React.FC = () => {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-white" style={{ color: "#969696" }}>
+                  Or continue with
+                </span>
               </div>
             </div>
           </div>
@@ -198,7 +202,7 @@ const Login: React.FC = () => {
           <LoginWithGoogle callback={handleGoogleLogin} />
 
           {/* Sign Up Link */}
-          <p className="text-center text-sm text-gray-600 mt-6">
+          <p className="text-center text-sm mt-6" style={{ color: "#969696" }}>
             Need an account?{" "}
             <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
               Create one
@@ -208,8 +212,10 @@ const Login: React.FC = () => {
       </div>
 
       {/* Right side - Blue background image */}
-      <div className="hidden lg:block flex-1 relative">
-        <img src={blueImageSvg} alt="Blue Abstract Background" className="absolute inset-0 w-full h-full object-cover" />
+      <div className="hidden lg:block flex-1 p-3">
+        <div className="relative h-full w-full rounded-2xl overflow-hidden">
+          <img src={blueImageSvg} alt="Blue Abstract Background" className="absolute inset-0 w-full h-full object-cover" />
+        </div>
       </div>
     </div>
   )
